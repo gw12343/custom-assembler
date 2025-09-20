@@ -1,0 +1,128 @@
+package com.gabe.assembler;
+
+import com.gabe.cpu.CPUInstruction;
+
+import java.util.Map;
+
+import static com.gabe.assembler.OperandType.*;
+
+/**
+ * Enum representing assembler mnemonics and their corresponding CPU instructions.
+ * Each mnemonic is associated with a map of operation headers to their
+ * respective CPU instructions.
+ */
+@SuppressWarnings("SpellCheckingInspection")
+public enum AssemblerMnemonic {
+
+    NOP(Map.of(new OperationHeader(), CPUInstruction.NO_OPERATION)),
+    HLT(Map.of(new OperationHeader(), CPUInstruction.HLT)),
+
+    JMP(Map.of(new OperationHeader(MEM), CPUInstruction.JMP)),
+    JNZ(Map.of(new OperationHeader(MEM), CPUInstruction.JNZ)),
+    JZ(Map.of(new OperationHeader(MEM), CPUInstruction.JZ)),
+    JL(Map.of(new OperationHeader(MEM), CPUInstruction.JL)),
+    JG(Map.of(new OperationHeader(MEM), CPUInstruction.JG)),
+    JE(Map.of(new OperationHeader(MEM), CPUInstruction.JE)),
+    JNE(Map.of(new OperationHeader(MEM), CPUInstruction.JNE)),
+    JC(Map.of(new OperationHeader(MEM), CPUInstruction.JC)),
+
+
+    CALL(Map.of(new OperationHeader(MEM), CPUInstruction.CALL)),
+    RET(Map.of(new OperationHeader(), CPUInstruction.RET)),
+
+
+    PUSH(Map.of(new OperationHeader(REGISTER), CPUInstruction.PUSH)),
+    POP(Map.of(new OperationHeader(REGISTER), CPUInstruction.POP)),
+
+
+    SHR(Map.of(new OperationHeader(REGISTER), CPUInstruction.SHR)),
+    SHL(Map.of(new OperationHeader(REGISTER), CPUInstruction.SHL)),
+
+
+    INC(Map.of(new OperationHeader(REGISTER), CPUInstruction.INC)),
+    DEC(Map.of(new OperationHeader(REGISTER), CPUInstruction.DEC)),
+
+    CMP(Map.of(
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.CMP,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.CMP_IM
+    )),
+
+    ADD(Map.of(
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.ADD,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.ADD_IM
+    )),
+    SUB(Map.of(
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.SUB,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.SUB_IM
+    )),
+
+    MUL(Map.of(
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.MUL,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.MUL_IM
+    )),
+
+    AND(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.AND)),
+    OR(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.OR)),
+    NOT(Map.of(new OperationHeader(REGISTER), CPUInstruction.NOT)),
+    XOR(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.XOR)),
+    NAND(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.NAND)),
+
+
+    MOV(Map.of(
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.MOV,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.MOVI,
+            new OperationHeader(REGISTER, MEM), CPUInstruction.MOVFROMABS,
+            new OperationHeader(REGISTER, MEM_IND), CPUInstruction.MOVFROMIND,
+            new OperationHeader(MEM, REGISTER), CPUInstruction.MOVTOABS,
+            new OperationHeader(MEM_IND, REGISTER), CPUInstruction.MOVTOIND,
+            new OperationHeader(REGISTER, REGISTER_IND), CPUInstruction.MOVFROMREGIND,
+            new OperationHeader(REGISTER_IND, REGISTER), CPUInstruction.MOVTOREGIND,
+            new OperationHeader(REGISTER_IND_OFFSET, REGISTER), CPUInstruction.MOVTOREGINDOFFSET,
+            new OperationHeader(REGISTER, REGISTER_IND_OFFSET), CPUInstruction.MOVFROMREGINDOFFSET
+    ));
+
+
+    private final Map<OperationHeader, CPUInstruction> headers;
+
+    /**
+     * Constructor for the AssemblerMnemonic enum.
+     *
+     * @param headers the map of operation headers to CPU instructions
+     */
+    AssemblerMnemonic(Map<OperationHeader, CPUInstruction> headers) {
+        this.headers = headers;
+
+    }
+
+    /**
+     * Gets the CPU instruction associated with the given operation header.
+     *
+     * @param header the operation header
+     * @return the CPU instruction
+     */
+    public CPUInstruction getInstruction(OperationHeader header){
+        return headers.get(header);
+    }
+
+    /**
+     * Generates a regex pattern to match any mnemonic in a case-insensitive manner.
+     *
+     * @return the regex pattern as a string
+     */
+    public static String getRegex(){
+        StringBuilder s = new StringBuilder();
+        for (AssemblerMnemonic mnemonics : AssemblerMnemonic.values()) {
+            s.append("^(");
+            // Allow upper or lower case for each character
+            for(char c : mnemonics.name().toCharArray()){
+                s.append("[");
+                s.append(Character.toUpperCase(c));
+                s.append(Character.toLowerCase(c));
+                s.append("]");
+            }
+            s.append(")").append("|");
+        }
+        return s.deleteCharAt(s.length() - 1).toString();
+    }
+}
+
