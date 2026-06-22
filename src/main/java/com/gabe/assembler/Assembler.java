@@ -30,7 +30,7 @@ public class Assembler {
             }else if(line.directive() != null){
                 System.out.println("DIRECTIVE: " + line.directive().name());
                 switch (line.directive()){
-                    case RES -> {
+                    case RESW -> {
                         adr++;
                     }
                     case ASCIIZ -> {
@@ -48,6 +48,9 @@ public class Assembler {
         String[] dat = new String[size];
         int a = 0;
         for (Parser.ASMLine line : lines) {
+
+            //System.out.println("i: " + line.i() + "    dir: " + line.directive() + "   label: " + line.label());
+
             if(line.i() != null) {
                 CPUInstruction c = line.i();
                 InstructionData data = c.getData();
@@ -59,9 +62,10 @@ public class Assembler {
             }else if(line.directive() != null){
                 System.out.println("DIRECTIVE: " + line.directive().name());
                 switch (line.directive()){
-                    case RES -> {
-                        dat[a++] = toHexString((long)(double)line.directiveData().get(0), 8);
-                        a++;
+                    case RESW -> {
+                        var v = toHexString((long)(double)line.directiveData().get(0), 8);
+                        System.out.println(v);
+                        dat[a++] = v;
                     }
                     case ASCIIZ -> {
                         String str = ((String)line.directiveData().get(0));
@@ -82,7 +86,9 @@ public class Assembler {
         for(int j = a; j < size; j++) {
             dat[j] = "00000000";
         }
-        FileUtils.writePlainHexFile(dat, "C:\\Users\\Gabe\\CLionProjects\\CPU32Emulator\\program.rom");
+        FileUtils.writePlainHexFile(dat, "C:\\Users\\Gabe\\Documents\\GitHub\\custom-emulator\\program.rom");
+        FileUtils.writeHexMemFile(dat, "C:\\Users\\Gabe\\Documents\\GitHub\\custom-emulator\\program.mem");
+        FileUtils.writeHexMemFile(dat, "C:\\Users\\Gabe\\Documents\\VivadoProjects\\32BitCPU\\32BitCPU.srcs\\sources_1\\new\\program.mem");
     }
 
     public static int getRegister(String s){
@@ -147,7 +153,7 @@ public class Assembler {
     public static String toHexString(long i, int digits){
         String s = Long.toHexString(i);
         if(s.length() > digits) {
-            return s.substring(0, digits);
+            throw new RuntimeException("Literal size exceeds word length!");
         }
         return "0".repeat(digits - s.length()) + s;
     }

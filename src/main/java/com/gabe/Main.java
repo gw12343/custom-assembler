@@ -8,10 +8,10 @@ public class Main {
     public static void main(String[] args) {
         switch (args[0]) {
             case "rom" -> {
-                MicrocodeRomGenerator.exportROM(args.length > 1 ? args[1] : "C:\\Users\\Gabe\\CLionProjects\\CPU32Emulator\\microcode.rom");
+                MicrocodeRomGenerator.exportROM(args.length > 1 ? args[1] : "C:\\Users\\Gabe\\Documents\\GitHub\\custom-emulator\\microcode.rom");
                 return;
             } case "table" -> {
-                MicrocodeRomGenerator.exportTruthTable(args.length > 1 ? args[1] : "C:\\Users\\Gabe\\CLionProjects\\CPU32Emulator\\truth_table_export.txt");
+                MicrocodeRomGenerator.exportTruthTable(args.length > 1 ? args[1] : "C:\\Users\\Gabe\\Documents\\GitHub\\custom-emulator\\truth_table_export.txt");
                 return;
             } case "asm" -> {
                 return;

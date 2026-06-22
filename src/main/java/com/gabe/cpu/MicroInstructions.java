@@ -2,6 +2,7 @@ package com.gabe.cpu;
 
 @SuppressWarnings("unused SpellCheckingInspection")
 class MicroInstructions {
+    public static final int WAIT_FOR_RAM_UPDATE = 0b0;
     /*========================-= LOAD INSTRUCTIONS =-==============================*/
     public static final int LOAD_R1         = 0b0_0_000_0_0_0_0_0_0_0_0_0_0_0000_00_0000_0001;
     public static final int LOAD_R2         = 0b0_0_000_0_0_0_0_0_0_0_0_0_0_0000_00_0000_0010;

@@ -1,7 +1,7 @@
 package com.gabe.assembler;
 
 public enum AssemblerDirectives {
-    RES,
+    RESW,
     ASCIIZ,
     ASCII;
 

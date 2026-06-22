@@ -112,6 +112,14 @@ public class Parser {
      */
     public static Operand operand(){
         if(match(HASH)){
+            System.out.println("pref: " + prev());
+            System.out.println("next: " + peek());
+            if(check(CHAR)){
+
+                consume(CHAR, "Expect char");
+                return new Operand(OperandType.IMD, prev().literal());
+            }
+
             consume(NUMBER, "Expected number");
             return new Operand(OperandType.IMD, prev().literal());
         } else if(check(IDENTIFIER) && !checkNext(COLON)){

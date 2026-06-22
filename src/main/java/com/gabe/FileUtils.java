@@ -28,6 +28,23 @@ public class FileUtils {
         }
     }
 
+    public static void writeHexMemFile(String[] data, String path){
+        if(path == null)
+            return;
+        StringBuilder out = new StringBuilder();
+        for (String datum : data) {
+            out.append(datum);
+            out.append("\n");
+        }
+        out.setLength(out.length() - 1);
+
+        try (PrintWriter o = new PrintWriter(path)) {
+            o.println(out);
+        }catch (Exception e){
+            System.err.println("Failed to save file! " + path + "\n" + e.getMessage());
+        }
+    }
+
     public static void writeTable(HashMap<String, String> table, String path){
         if(path == null)
             return;

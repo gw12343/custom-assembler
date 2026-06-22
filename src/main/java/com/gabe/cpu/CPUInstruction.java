@@ -69,6 +69,7 @@ public enum CPUInstruction {
 
     CALL(List.of(
             STORE_SP | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             STORE_PC | LOAD_RAM | SP_COUNT | SP_DEC,
             STORE_LIT | LOAD_PC,
             MC_END
@@ -77,6 +78,7 @@ public enum CPUInstruction {
     RET(List.of(
             SP_COUNT,
             STORE_SP | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             STORE_RAM | LOAD_PC,
             MC_END
     ), 0x31, InstructionData.empty()),
@@ -84,6 +86,7 @@ public enum CPUInstruction {
 
     PUSH(List.of(
             STORE_SP | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             STORE_INS_A | LOAD_RAM | SP_COUNT | SP_DEC,
             MC_END
     ), 0x33, InstructionData.register1()),
@@ -91,6 +94,7 @@ public enum CPUInstruction {
     POP(List.of(
             SP_COUNT,
             STORE_SP | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             LOAD_INS_A | STORE_RAM,
             MC_END
     ), 0x34, InstructionData.register1()),
@@ -111,49 +115,58 @@ public enum CPUInstruction {
 
     MOVFROMABS(List.of(
             STORE_LIT | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             LOAD_INS_A | STORE_RAM,
             MC_END
     ), 0x47, InstructionData.register1lit2()),
 
     MOVFROMIND(List.of(
             STORE_LIT | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             LOAD_ADDR | STORE_RAM,
             LOAD_INS_A | STORE_RAM,
             MC_END
     ), 0x48, InstructionData.register1lit2()),
     MOVTOABS(List.of(
             STORE_LIT | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             STORE_INS_A | LOAD_RAM,
             MC_END
     ), 0x49, InstructionData.lit1register2()),
 
     MOVTOIND(List.of(
             STORE_LIT | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             LOAD_ADDR | STORE_RAM,
+            WAIT_FOR_RAM_UPDATE,
             STORE_INS_A | LOAD_RAM,
             MC_END
     ), 0x50, InstructionData.lit1register2()),
 
     MOVFROMREGIND(List.of(
             STORE_INS_B | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             LOAD_INS_A | STORE_RAM,
             MC_END
     ), 0x51, InstructionData.register1and2()),
 
     MOVTOREGIND(List.of(
             STORE_INS_A | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             STORE_INS_B | LOAD_RAM,
             MC_END
     ), 0x52, InstructionData.register1and2()),
 
     MOVTOREGINDOFFSET(List.of(
             USE_INS_LIT_B | ALU_ADD | STORE_ALU_OUT | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             STORE_INS_B | LOAD_RAM,
             MC_END
     ), 0x53, InstructionData.register1and2andoffset1()),
 
     MOVFROMREGINDOFFSET(List.of(
             USE_INS_LIT_B | ALU_ADD | STORE_ALU_OUT | LOAD_ADDR,
+            WAIT_FOR_RAM_UPDATE,
             LOAD_INS_B | STORE_RAM,
             MC_END
     ), 0x54, InstructionData.register2and1andoffset2()),
