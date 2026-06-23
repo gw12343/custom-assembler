@@ -24,6 +24,12 @@ public enum CPUInstruction {
             MC_END
     ), 0xe1, InstructionData.op1lit()),
 
+
+    JMP_REG(List.of(
+            STORE_INS_A | LOAD_PC,
+            MC_END
+    ), 0xf1, InstructionData.register1()),
+
     JNZ(List.of(
             RESET_NOT0,
             STORE_LIT | LOAD_PC,

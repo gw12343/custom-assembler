@@ -96,6 +96,12 @@ public class Parser {
 
                     throw new RuntimeException("Label not defined: " + literal);
                 }
+                case LABEL_IMD -> {
+                    if(labels.containsKey((String) literal))
+                        return Assembler.toBinaryString(labels.get((String) literal), 16);
+
+                    throw new RuntimeException("Imd label not defined: " + literal);
+                }
             }
 
             return null;
@@ -118,6 +124,13 @@ public class Parser {
 
                 consume(CHAR, "Expect char");
                 return new Operand(OperandType.IMD, prev().literal());
+            }
+
+            // literal label address
+            if(check(IDENTIFIER)){
+                consume(IDENTIFIER, "Expect label");
+                System.out.println("IMD LABEL: " + prev().lexeme());
+                return new Operand(OperandType.LABEL_IMD, prev().lexeme());
             }
 
             consume(NUMBER, "Expected number");

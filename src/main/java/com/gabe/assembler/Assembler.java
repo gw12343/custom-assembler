@@ -28,9 +28,8 @@ public class Assembler {
             if (line.i() != null) {
                 adr++;
             }else if(line.directive() != null){
-                System.out.println("DIRECTIVE: " + line.directive().name());
                 switch (line.directive()){
-                    case RESW -> {
+                    case RESW, FLOAT -> {
                         adr++;
                     }
                     case ASCIIZ -> {
@@ -38,6 +37,10 @@ public class Assembler {
                     }
                     case ASCII -> {
                         adr += ((String)line.directiveData().get(0)).length();
+                    }
+                    case ORG -> {
+                        adr = (int)(double) line.directiveData().get(0);
+                        System.out.println("org: " + adr);
                     }
                 }
             }
@@ -60,8 +63,12 @@ public class Assembler {
                 dat[a] = st;
                 a++;
             }else if(line.directive() != null){
-                System.out.println("DIRECTIVE: " + line.directive().name());
                 switch (line.directive()){
+                    case FLOAT -> {
+                        var v = toHexString(Float.floatToIntBits((float)(double) line.directiveData().get(0)), 8);
+                        System.out.println("float dir: " + v + "       f: " + line.directiveData().get(0));
+                        dat[a++] = v;
+                    }
                     case RESW -> {
                         var v = toHexString((long)(double)line.directiveData().get(0), 8);
                         System.out.println(v);
@@ -83,6 +90,14 @@ public class Assembler {
                 }
             }
         }
+
+        int addr = 0x8000;
+        for(int i =0 ;i < a; i++){
+
+            System.out.print(toHexString(addr++, 4) + "=" + dat[i]);
+        }
+        System.out.println("j8000");
+
         for(int j = a; j < size; j++) {
             dat[j] = "00000000";
         }

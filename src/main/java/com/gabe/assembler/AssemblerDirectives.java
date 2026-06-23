@@ -1,9 +1,12 @@
 package com.gabe.assembler;
 
 public enum AssemblerDirectives {
+    FLOAT,
     RESW,
+    ORG,
     ASCIIZ,
-    ASCII;
+    ASCII
+    ;
 
 
 

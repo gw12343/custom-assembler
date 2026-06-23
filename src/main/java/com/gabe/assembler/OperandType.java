@@ -31,5 +31,10 @@ public enum OperandType {
     /**
      * A label, later substituted with MEM
      */
-    LABEL
+    LABEL,
+    /**
+     * A label, but just the address it points to, not the value
+     *     later substituted with IMD
+     */
+    LABEL_IMD
 }

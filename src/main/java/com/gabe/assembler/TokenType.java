@@ -31,7 +31,7 @@ public enum TokenType {
     // Literals.
     CHAR("^\\'(\\\\.|[^\\\"\\\\])\\'"),
     STRING("^\\\"(\\\\.|[^\\\"\\\\])*\\\""),
-    NUMBER("^(\\$[0-9A-Fa-f]+|%[01]+|\\b\\d+\\b)"),
+    NUMBER("^(\\$[0-9A-Fa-f]+|%[01]+|f\\d+(\\.\\d+)?|\\d+)"),
     IDENTIFIER("^[_a-zA-Z\\p{So}_]{1,31}[_a-zA-Z0-9\\p{So}_]{0,31}"),
 
     // End of File

@@ -17,7 +17,9 @@ public enum AssemblerMnemonic {
     NOP(Map.of(new OperationHeader(), CPUInstruction.NO_OPERATION)),
     HLT(Map.of(new OperationHeader(), CPUInstruction.HLT)),
 
-    JMP(Map.of(new OperationHeader(MEM), CPUInstruction.JMP)),
+    JMP(Map.of(new OperationHeader(MEM), CPUInstruction.JMP,
+            new OperationHeader(REGISTER), CPUInstruction.JMP_REG)),
+
     JNZ(Map.of(new OperationHeader(MEM), CPUInstruction.JNZ)),
     JZ(Map.of(new OperationHeader(MEM), CPUInstruction.JZ)),
     JL(Map.of(new OperationHeader(MEM), CPUInstruction.JL)),

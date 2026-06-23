@@ -14,6 +14,8 @@ public class MicrocodeRomGenerator {
     public static void exportROM(String path){
         String[] data = generateDefaultData();;
         FileUtils.writePlainHexFile(data, path);
+        FileUtils.writeHexMemFile(data, "C:\\Users\\Gabe\\Documents\\GitHub\\custom-emulator\\microcode.mem");
+        FileUtils.writeHexMemFile(data, "C:\\Users\\Gabe\\Documents\\VivadoProjects\\32BitCPU\\32BitCPU.srcs\\sources_1\\new\\microcode.mem");
     }
 
     private static  String[] generateDefaultData() {

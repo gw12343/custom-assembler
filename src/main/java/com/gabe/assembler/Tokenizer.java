@@ -42,6 +42,7 @@ public class Tokenizer {
                         }
 
                         s = s.substring(match.length());
+
                         consumed = true;
                         switch (t){
                             case EMPTY -> {
@@ -53,6 +54,8 @@ public class Tokenizer {
                                     d = Long.parseLong(match.substring(1), 16);
                                 }else if(match.startsWith("%")){
                                     d = Integer.parseInt(match.substring(1), 2);
+                                }else if(match.startsWith("f")){
+                                    d = Float.parseFloat(match.substring(1));
                                 }else {
                                     d = Integer.parseInt(match);
                                 }
@@ -82,7 +85,7 @@ public class Tokenizer {
             }
 
             if(!consumed){
-                String lexeme = s.substring(0, 1);
+                String lexeme = s;//s.substring(0, );
                 throw new RuntimeException("Invalid token: '" +lexeme+"'");
             }
         }

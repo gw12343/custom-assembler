@@ -22,7 +22,7 @@ public record OperationHeader(OperandType... locations) {
         int o = 0;
         int i = 12;
         for (OperandType location : locations) {
-            o += x * ((location == OperandType.LABEL ? OperandType.MEM : location).ordinal() + i);
+            o += x * ((location == OperandType.LABEL ? OperandType.MEM : (location == OperandType.LABEL_IMD ? OperandType.IMD : location)).ordinal() + i);
             x *= 10;
             x ^= o;
             i++;
