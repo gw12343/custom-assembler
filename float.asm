@@ -1,40 +1,167 @@
 .org $8000
-
-
-
     mov sp, #$fff           ; Setup stack
     mov bp, #$fff           ; Initialize base pointer to match stack bottom
     mov r8, #$6000          ; Output Port
-    mov r2, #1
-    mov [r8], r2            ; Force TX pin HIGH (Idle State)
 
-
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
-    call delay_1bit
+    call init_uart
+    call clear_screen
 
     ; Load Float A directly
     mov r1, myconst
     ; Load Float B directly
     mov r2, myconst2
 
-    call fadd               ; Call Floating-Point Add (Arguments in r1, r2)
+    ;call fadd               ; Call Floating-Point Add (Arguments in r1, r2)
 
-    call print_float_dec    ; Print the 32-bit float in r1 as Decimal ASCII
+    ;call print_float_dec    ; Print the 32-bit float in r1 as Decimal ASCII
 
-    mov r1, #0
-    mov [r8], r1
 
+    mov r6, #5
+    mov r7, myconst ; // float num
+    lbl:
+        mov r1, r6
+        call print_uint
+
+        call send_newline
+
+        mov r1, r7
+        call print_float_dec
+
+        call send_newline
+
+        mov r2, myconst2
+        call fadd
+        mov r7, r1
+
+        dec r6
+        cmp r6, #0
+        jl donel_loop
+        jmp lbl
+    donel_loop:
     hlt                     ; Terminate program
+
+
+; ==========================================================
+; Function: send_newline
+; Send Linefeed and CR over uart
+; Preserves registers
+; ==========================================================
+send_newline:
+    push r5
+    mov r5, #$0D ; newline
+    call uart_tx_char
+    mov r5, #$0A ; newline
+    call uart_tx_char
+    pop r5
+    ret
+
+; ==========================================================
+; Function: init_uart
+; Set tx to idle state, wait enough time before start bit
+; is allowed. Preserves registers
+; ==========================================================
+init_uart:
+    push r2
+    mov r2, #1
+    mov [r8], r2            ; Force TX pin HIGH (Idle State)
+
+    call delay_1bit
+
+    pop r2
+    ret
+; ==========================================================
+; Function: clear_screen
+; Sends clear screen sequence to Tera Term
+; Preserves registers
+; ==========================================================
+clear_screen:
+    push r5
+    mov r5, #27
+    call uart_tx_char
+    mov r5, #91
+    call uart_tx_char
+    mov r5, #50
+    call uart_tx_char
+    mov r5, #74
+    call uart_tx_char
+    mov r5, #27
+    call uart_tx_char
+    mov r5, #91
+    call uart_tx_char
+    mov r5, #72
+    call uart_tx_char
+    pop r5
+    ret
+
+; ==========================================================
+; print_uint
+; Prints unsigned integer in r1
+; Input: r1 = value
+; ==========================================================
+
+print_uint:
+    push bp
+    mov bp, sp
+
+    push r2
+    push r3
+    push r4
+    push r5
+
+    ; Special case: 0
+    cmp r1, #0
+    jne print_uint_start
+
+    mov r5, #48          ; '0'
+    call uart_tx_char
+    jmp print_uint_done
+
+print_uint_start:
+    mov r3, #$FFFF
+    push r3              ; sentinel
+
+extract_loop:
+    mov r2, #0           ; quotient
+    mov r4, r1           ; remainder
+
+div10_loop:
+    cmp r4, #10
+    jl div10u_done
+
+    sub r4, #10
+    inc r2
+    jmp div10_loop
+
+div10u_done:
+    push r4              ; digit
+    mov r1, r2           ; quotient
+
+    cmp r1, #0
+    jne extract_loop
+
+print_loop:
+    pop r2
+
+    cmp r2, #$FFFF
+    je print_uint_done
+
+    add r2, #48          ; digit -> ASCII
+
+    mov r5, r2
+    call uart_tx_char
+
+    jmp print_loop
+
+print_uint_done:
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+
+    pop bp
+    ret
+
+
 
 ; ==========================================
 ; Subroutine: uart_tx_char
@@ -394,6 +521,5 @@ mask_mant:     .resw $007FFFFF
 one_bit:       .resw $00800000
 overflow_mask: .resw $01000000
 
-myconst:       .float f9.4
-myconst2:      .float f8.3
-
+myconst:       .float f12.5
+myconst2:      .float f1.0

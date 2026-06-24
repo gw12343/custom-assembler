@@ -23,6 +23,11 @@ public class Assembler {
 
         for (Parser.ASMLine line : lines) {
             if (line.label() != null) {
+                if(labels.containsKey(line.label())){
+                    //error, duplicate label
+                    System.err.println("Duplicate label: " + line.label());
+                    return;
+                }
                 labels.put(line.label(), adr);
             }
             if (line.i() != null) {

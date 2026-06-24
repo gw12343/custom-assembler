@@ -4,22 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="add new jump instruction to register value, add immediate label operand type">
-      <change afterPath="$PROJECT_DIR$/echo.asm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples.asm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/float.asm" afterDir="false" />
+    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="add jump to register, add immediate label op and add support for floats">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/float.asm" beforeDir="false" afterPath="$PROJECT_DIR$/float.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerDirectives.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerDirectives.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/OperandType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/OperandType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/OperationHeader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/OperationHeader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/TokenType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Tokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/CPUInstruction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/CPUInstruction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/MicrocodeRomGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/MicrocodeRomGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.asm" beforeDir="false" afterPath="$PROJECT_DIR$/test.asm" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,7 +200,7 @@
       <workItem from="1781898199648" duration="15475000" />
       <workItem from="1782058272604" duration="1263000" />
       <workItem from="1782064687733" duration="31782000" />
-      <workItem from="1782169189262" duration="6569000" />
+      <workItem from="1782169189262" duration="11180000" />
     </task>
     <task id="LOCAL-00001" summary="Add delay in microcode for synchronous ram reads, tweak directives, add .mem file generation for vivado">
       <option name="closed" value="true" />
@@ -222,7 +210,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782104792627</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="add jump to register, add immediate label op and add support for floats">
+      <option name="closed" value="true" />
+      <created>1782246010647</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1782246010647</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -232,6 +228,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Add delay in microcode for synchronous ram reads, tweak directives, add .mem file generation for vivado" />
     <MESSAGE value="add new jump instruction to register value, add immediate label operand type" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new jump instruction to register value, add immediate label operand type" />
+    <MESSAGE value="add jump to register, add immediate label op and add support for floats" />
+    <option name="LAST_COMMIT_MESSAGE" value="add jump to register, add immediate label op and add support for floats" />
   </component>
 </project>
