@@ -2,7 +2,10 @@ package com.gabe.assembler;
 
 import com.gabe.cpu.CPUInstruction;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static com.gabe.assembler.OperandType.*;
 
@@ -63,12 +66,22 @@ public enum AssemblerMnemonic {
             new OperationHeader(REGISTER, IMD), CPUInstruction.MUL_IM
     )),
 
-    AND(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.AND)),
-    OR(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.OR)),
-    NOT(Map.of(new OperationHeader(REGISTER), CPUInstruction.NOT)),
-    XOR(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.XOR)),
-    NAND(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.NAND)),
+    AND(Map.of(
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.AND,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.AND_IM
+    )),
 
+    OR(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.OR,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.OR_IM)),
+
+    XOR(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.XOR,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.XOR_IM)),
+
+    NAND(Map.of(new OperationHeader(REGISTER, REGISTER), CPUInstruction.NAND,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.NAND_IM)),
+
+
+    NOT(Map.of(new OperationHeader(REGISTER), CPUInstruction.NOT)),
 
     MOV(Map.of(
             new OperationHeader(REGISTER, REGISTER), CPUInstruction.MOV,
@@ -82,6 +95,18 @@ public enum AssemblerMnemonic {
             new OperationHeader(REGISTER_IND_OFFSET, REGISTER), CPUInstruction.MOVTOREGINDOFFSET,
             new OperationHeader(REGISTER, REGISTER_IND_OFFSET), CPUInstruction.MOVFROMREGINDOFFSET
     ));
+
+    static {
+        int numMnemonics = Arrays.stream(AssemblerMnemonic.values()).map(v -> v.headers.size()).reduce(0, Integer::sum);
+        int numCpuInstructions = CPUInstruction.values().length;
+
+        if(numMnemonics != numCpuInstructions) {
+
+            System.err.println("Invalid number of Mnemonics.    m: " + numMnemonics + "  i: " + numCpuInstructions);
+
+            System.exit(-1);
+        }
+    }
 
 
     private final Map<OperationHeader, CPUInstruction> headers;

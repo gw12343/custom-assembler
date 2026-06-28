@@ -51,13 +51,13 @@ public class Tokenizer {
                             case NUMBER -> {
                                 double d;
                                 if(match.startsWith("$")){
-                                    d = Long.parseLong(match.substring(1), 16);
+                                    d = Long.parseUnsignedLong(match.substring(1), 16);
                                 }else if(match.startsWith("%")){
-                                    d = Integer.parseInt(match.substring(1), 2);
+                                    d = Long.parseUnsignedLong(match.substring(1), 2);
                                 }else if(match.startsWith("f")){
                                     d = Float.parseFloat(match.substring(1));
                                 }else {
-                                    d = Integer.parseInt(match);
+                                    d = Integer.parseUnsignedInt(match);
                                 }
                                 tokens.add(new Token(t, match, d, lineNum, charNum));
                                 break token_search;
@@ -66,6 +66,11 @@ public class Tokenizer {
                                 String val = match.substring(1,match.length()-1);
                                 val = val.replaceAll("\\\\\\\"", "\"");
                                 val = val.replaceAll("\\\\n", "\n");
+                                val = val.replaceAll("\\\\r", "\r");
+                                val = val.replaceAll("\\\\t", "\t");
+                                val = val.replaceAll("\\\\b", "\b");
+                                val = val.replaceAll("\\\\f", "\f");
+                                val = val.replaceAll("\\\\e", "\u001b");   // escape
                                 tokens.add(new Token(t, match, val, lineNum, charNum));
                             }
                             case CHAR -> {

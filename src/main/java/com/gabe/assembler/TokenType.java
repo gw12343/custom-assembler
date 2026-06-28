@@ -40,7 +40,7 @@ public enum TokenType {
     // List of regular expressions representing this token
     final String[] regexen;
     TokenType(String... regexen){
-        System.out.println(Arrays.toString(regexen));
+        //System.out.println(Arrays.toString(regexen));
         this.regexen = regexen;
     }
 

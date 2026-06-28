@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="add jump to register, add immediate label op and add support for floats">
+    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="add duplicate label error message">
+      <change afterPath="$PROJECT_DIR$/bootloader.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/float.asm" beforeDir="false" afterPath="$PROJECT_DIR$/float.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Tokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.asm" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +206,11 @@
       <workItem from="1781898199648" duration="15475000" />
       <workItem from="1782058272604" duration="1263000" />
       <workItem from="1782064687733" duration="31782000" />
-      <workItem from="1782169189262" duration="11180000" />
+      <workItem from="1782169189262" duration="39755000" />
+      <workItem from="1782447849231" duration="2774000" />
+      <workItem from="1782510046978" duration="613000" />
+      <workItem from="1782511231457" duration="3813000" />
+      <workItem from="1782604415569" duration="9445000" />
     </task>
     <task id="LOCAL-00001" summary="Add delay in microcode for synchronous ram reads, tweak directives, add .mem file generation for vivado">
       <option name="closed" value="true" />
@@ -218,7 +228,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782246010647</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add duplicate label error message">
+      <option name="closed" value="true" />
+      <created>1782267746952</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1782267746952</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,6 +247,7 @@
     <MESSAGE value="Add delay in microcode for synchronous ram reads, tweak directives, add .mem file generation for vivado" />
     <MESSAGE value="add new jump instruction to register value, add immediate label operand type" />
     <MESSAGE value="add jump to register, add immediate label op and add support for floats" />
-    <option name="LAST_COMMIT_MESSAGE" value="add jump to register, add immediate label op and add support for floats" />
+    <MESSAGE value="add duplicate label error message" />
+    <option name="LAST_COMMIT_MESSAGE" value="add duplicate label error message" />
   </component>
 </project>

@@ -20,7 +20,7 @@ public class Parser {
         tokens = t;
 
         while(!isAtEnd()){
-            System.out.println(peek());
+            //System.out.println(peek());
             String label = null;
             if(match(IDENTIFIER)){
                 Token a = prev();
@@ -118,8 +118,8 @@ public class Parser {
      */
     public static Operand operand(){
         if(match(HASH)){
-            System.out.println("pref: " + prev());
-            System.out.println("next: " + peek());
+            //System.out.println("pref: " + prev());
+            //System.out.println("next: " + peek());
             if(check(CHAR)){
 
                 consume(CHAR, "Expect char");

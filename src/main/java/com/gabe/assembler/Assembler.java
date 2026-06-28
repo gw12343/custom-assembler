@@ -59,22 +59,33 @@ public class Assembler {
 
             //System.out.println("i: " + line.i() + "    dir: " + line.directive() + "   label: " + line.label());
 
+//            if(line.directive() != null && line.directive() == AssemblerDirectives.ORG){
+//                int newAdr = (int)(double) line.directiveData().get(0);
+//                System.out.println("hit org: " + newAdr);
+//                while(a < newAdr){
+//                    dat[a++] = "0000";
+//                }
+//
+//            }
+
             if(line.i() != null) {
                 CPUInstruction c = line.i();
                 InstructionData data = c.getData();
                 String code = data.generateBin(c, labels, line.operands().toArray(new Parser.Operand[0]));
                 String st = toHexString(Long.parseLong(code, 2), 8);
-                System.out.println(st);
+                //System.out.println(st);
                 dat[a] = st;
                 a++;
             }else if(line.directive() != null){
                 switch (line.directive()){
+
                     case FLOAT -> {
                         var v = toHexString(Float.floatToIntBits((float)(double) line.directiveData().get(0)), 8);
                         System.out.println("float dir: " + v + "       f: " + line.directiveData().get(0));
                         dat[a++] = v;
                     }
                     case RESW -> {
+                        System.out.println("resw: " + line);
                         var v = toHexString((long)(double)line.directiveData().get(0), 8);
                         System.out.println(v);
                         dat[a++] = v;
@@ -171,7 +182,7 @@ public class Assembler {
     }
 
     public static String toHexString(long i, int digits){
-        String s = Long.toHexString(i);
+        String s = Long.toUnsignedString(i, 16);
         if(s.length() > digits) {
             throw new RuntimeException("Literal size exceeds word length!");
         }
