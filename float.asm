@@ -54,7 +54,7 @@ border_end:
     inc r1
 
 snake_loop:
-mov r8, APPLE_X
+    mov r8, APPLE_X
     cmp r1, r8
     jne remove_tail
     mov r8, APPLE_Y
@@ -113,7 +113,20 @@ remove_tail:
     mov r1, #0
     mov [r8], r1 ; remove direction index at tail
     pop r1
+    jmp end_tail
 skip_remove_tail:
+    mov r8, SNAKE_LENGTH
+    inc r8
+    mov SNAKE_LENGTH, r8
+
+    mov r8, SPACES_LEFT
+    dec r8
+    mov SPACES_LEFT, r8
+    cmp r8, #0
+    je you_win           ; check for win
+
+    call move_apple
+end_tail:
 
 
 
@@ -135,6 +148,12 @@ skip_remove_tail:
 
     push r1
 
+    mov r8, SPACES_LEFT
+    push r8
+
+    mov r8, SNAKE_LENGTH
+    push r8
+
     push r7
     push r6
     push r2
@@ -144,6 +163,8 @@ skip_remove_tail:
 
     call printf
 
+    pop r1
+    pop r1
     pop r1
     pop r1
     pop r1
@@ -166,28 +187,9 @@ skip_remove_tail:
     push r8 ; keep track of index
     mov r8, [r8] ; get direction index at head
     cmp r8, #6
-    je apple
+    je not_over
     cmp r8, #0
     jne game_over
-    jmp not_over
-
-    apple:
-    mov r8, #3
-    mov APPLE_X, r8
-    mov APPLE_Y, r8
-
-    push r1
-    push r2
-    push r3
-    mov r1, APPLE_X
-    mov r2, APPLE_Y
-    mov r3, '@'
-    call output_at_pos
-    pop r3
-    pop r2
-    pop r1
-
-    ;TODO move apple
 
     not_over:
     pop r8
@@ -226,9 +228,29 @@ game_over:
     call cursor_to_pos
     mov r1, #GAME_OVER_TEXT
     call print_string
+    jmp print_score
+you_win:
+    mov r1, #18
+    mov r2, #8
+    call cursor_to_pos
+    mov r1, #YOU_WIN_TEXT
+    call print_string
+print_score:
+    mov r1, #18
+    mov r2, #9
+    call cursor_to_pos
+    mov r8, SNAKE_LENGTH
+    push r8
+    mov r8, #SCORE_TEXT
+    push r8
+    call printf
+    pop r8
+    pop r8
     hlt
 
-dbg: .asciiz "\r\nHEAD: (%d, %d)   \r\nTAIL: (%d, %d)   "
+
+
+dbg: .asciiz "\r\nHEAD: (%d, %d)  \r\nTAIL: (%d, %d)  \r\nL: %d  \r\nS: %d  "
 
 
 
@@ -275,6 +297,90 @@ check_buttons:
         pop r2
         pop r1
         ret
+
+
+snake_delay:
+    push r7
+    push r6
+    mov r6, #$004F                      ; Outer loop counter
+snake_delay_outer_loop:
+    cmp r6, #0                          ; Check if outer loop is finished
+    je snake_delay_end
+    mov r7, #$5FF                       ; Inner loop counter
+snake_delay_inner_loop:
+    call check_buttons
+    dec r7                              ; Decrement inner counter (Assume 1 cycle)
+    cmp r7, #0                          ; Check if inner loop is finished (Assume 1 cycle)
+    jne snake_delay_inner_loop          ; Jump if not equal (Assume 2 cycles)
+snake_delay_inner_end:
+    dec r6                              ; Decrement outer loop counter
+    jmp snake_delay_outer_loop          ; Loop back to outer
+snake_delay_end:
+    pop r6
+    pop r7
+    ret                                 ; Return to main loop
+
+
+
+
+
+
+move_apple:
+    push r1
+    push r2
+    push r3
+    call random32               ; get a random 32 bit #
+    and r1, #$ff                ; mod 256
+    mov r2, SPACES_LEFT         ; load # of spaces
+    dec r2                      ; highest index allowed, starting at 0
+    cmp r1, r2
+    jg move_apple_mod_loop      ; if random # is out of range, find mod
+    jmp move_apple_done_mod     ; otherwise skip mod
+move_apple_mod_loop:
+    sub r1, r2                  ; subtract to check new remainder
+    cmp r1, r2                  ; compare remainder
+    jg move_apple_mod_loop      ; keep subtracting until in range
+    ; SCAN LEFT TO RIGHT TOP TO BOTTOM, COUNTING EMPTY SPACES
+    ; UNTIL R1 IS 0, THEN PLACE APPLE THERE
+move_apple_done_mod:
+    mov r2, #2                  ; current x
+    mov r3, #2                  ; current y
+move_apple_loop:
+    cmp r1, #0                  ; check counter
+    je move_apple_done_xy       ; if reached final empty space, stay here
+    inc r2                      ; increment x
+    cmp r2, #15                 ; check for wrap
+    jne dont_nl                 ; if not needed, skip over wrap
+    mov r2, #2                  ; wrap back to left
+    inc r3                      ; go to next line
+dont_nl:
+    ; curr index
+    mov r8, r3                  ; y cord
+    sub r8, #1                  ; zero index
+    mul r8, #15                 ; times width
+    add r8, r2                  ; plus x
+    sub r8, #1                  ; zero index
+    add r8, #DIRECTION_GRID     ; offset into array
+    mov r8, [r8]
+    cmp r8, #0
+    jne invalid_space
+    dec r1
+    invalid_space:
+    jmp move_apple_loop
+move_apple_done_xy:
+    mov APPLE_X, r2
+    mov APPLE_Y, r3
+    mov r1, r2
+    mov r2, r3
+    mov r3, '@'
+    call output_at_pos
+done_move_apple:
+    pop r3
+    pop r2
+    pop r1
+    ret
+
+
 BTN_CENTER_MASK: .resw %000010000000000000000
 BTN_UP_MASK:     .resw %000100000000000000000
 BTN_LEFT_MASK:   .resw %001000000000000000000
@@ -282,8 +388,10 @@ BTN_RIGHT_MASK:  .resw %010000000000000000000
 BTN_DOWN_MASK:   .resw %100000000000000000000
 MINUS_ONE:       .resw $ffffffff
 
-APPLE_X:        .resw 12
-APPLE_Y:        .resw 5
+APPLE_X:            .resw 12
+APPLE_Y:            .resw 5
+SNAKE_LENGTH:       .resw 3
+SPACES_LEFT:        .resw 166  ;  13x13 grid - 3 spaces for starting snake
 
 DIRECTION_GRID:
     .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3
@@ -303,36 +411,8 @@ DIRECTION_GRID:
     .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3
 
 GAME_OVER_TEXT: .asciiz "GAME OVER!"
-
-
-snake_delay:
-    push r7
-    push r6
-    mov r6, #$007F                      ; Outer loop counter
-snake_delay_outer_loop:
-    cmp r6, #0                          ; Check if outer loop is finished
-    je snake_delay_end
-
-    mov r7, #$5FF                       ; Inner loop counter
-
-snake_delay_inner_loop:
-    call check_buttons
-    dec r7                              ; Decrement inner counter (Assume 1 cycle)
-    cmp r7, #0                          ; Check if inner loop is finished (Assume 1 cycle)
-    jne snake_delay_inner_loop          ; Jump if not equal (Assume 2 cycles)
-
-snake_delay_inner_end:
-    dec r6                              ; Decrement outer loop counter
-    jmp snake_delay_outer_loop          ; Loop back to outer
-
-snake_delay_end:
-    pop r6
-    pop r7
-    ret                                 ; Return to main loop
-
-
-
-
+YOU_WIN_TEXT: .asciiz "YOU WIN!"
+SCORE_TEXT: .asciiz "SCORE: %d"
 
 
 
@@ -373,7 +453,7 @@ random32:
 
     pop r2
     ret
-RANDOM_SEED: .resw 42
+RANDOM_SEED: .resw 1234
 ; ==========================================================
 ; Function: cursor_to_pos
 ; Moves the cursor to (x, y)

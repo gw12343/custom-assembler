@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="moving snake example">
-      <change afterPath="$PROJECT_DIR$/shift_test.asm" afterDir="false" />
+    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="add new shift instructions and modes, add apples to snake example">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/float.asm" beforeDir="false" afterPath="$PROJECT_DIR$/float.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/CPUInstruction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/CPUInstruction.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,7 +204,7 @@
       <workItem from="1782510046978" duration="613000" />
       <workItem from="1782511231457" duration="3813000" />
       <workItem from="1782604415569" duration="18521000" />
-      <workItem from="1782706884724" duration="25486000" />
+      <workItem from="1782706884724" duration="34569000" />
     </task>
     <task id="LOCAL-00001" summary="Add delay in microcode for synchronous ram reads, tweak directives, add .mem file generation for vivado">
       <option name="closed" value="true" />
@@ -242,7 +238,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782605762140</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add new shift instructions and modes, add apples to snake example">
+      <option name="closed" value="true" />
+      <created>1782761211394</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1782761211394</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,6 +260,7 @@
     <MESSAGE value="add duplicate label error message" />
     <MESSAGE value="interpret literals as unsigned, add missing operation headers for some bitwise operations, begin snake demo" />
     <MESSAGE value="moving snake example" />
-    <option name="LAST_COMMIT_MESSAGE" value="moving snake example" />
+    <MESSAGE value="add new shift instructions and modes, add apples to snake example" />
+    <option name="LAST_COMMIT_MESSAGE" value="add new shift instructions and modes, add apples to snake example" />
   </component>
 </project>
