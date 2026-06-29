@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="add new shift instructions and modes, add apples to snake example">
+    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="working snake game">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/float.asm" beforeDir="false" afterPath="$PROJECT_DIR$/float.asm" afterDir="false" />
     </list>
@@ -204,7 +204,7 @@
       <workItem from="1782510046978" duration="613000" />
       <workItem from="1782511231457" duration="3813000" />
       <workItem from="1782604415569" duration="18521000" />
-      <workItem from="1782706884724" duration="34569000" />
+      <workItem from="1782706884724" duration="36214000" />
     </task>
     <task id="LOCAL-00001" summary="Add delay in microcode for synchronous ram reads, tweak directives, add .mem file generation for vivado">
       <option name="closed" value="true" />
@@ -246,7 +246,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782761211394</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="working snake game">
+      <option name="closed" value="true" />
+      <created>1782775613997</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1782775613997</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,6 +269,7 @@
     <MESSAGE value="interpret literals as unsigned, add missing operation headers for some bitwise operations, begin snake demo" />
     <MESSAGE value="moving snake example" />
     <MESSAGE value="add new shift instructions and modes, add apples to snake example" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new shift instructions and modes, add apples to snake example" />
+    <MESSAGE value="working snake game" />
+    <option name="LAST_COMMIT_MESSAGE" value="working snake game" />
   </component>
 </project>

@@ -6,52 +6,8 @@
     call init_uart
     call clear_screen
 
-
- ; PRINT BORDER
-    mov r5, #1
-    mov r3, '#'
-border_loop:
-    mov r1, r5
-    mov r2, #1
-    call output_at_pos   ; print left wall
-    mov r2, #15
-    call output_at_pos   ; print right wall
-
-    mov r2, r5
-    mov r1, #1
-    call output_at_pos   ; print top wall
-    mov r1, #15
-    call output_at_pos   ; print bottom wall
-
-    inc r5
-    cmp r5, #16
-    je border_end
-    jmp border_loop
-border_end:
-
-    ; PRINT APPLE
-    mov r1, APPLE_X
-    mov r2, APPLE_Y
-    mov r3, '@'
-    call output_at_pos
-
-    ; MOVE SNAKE
-    mov r1, #3  ; start x
-    mov r2, #5  ; start y
-    mov r3, 'S' ; char
-    mov r4, #1   ; dx
-    mov r5, #0   ; dy
-
-    mov r6, #3  ; tail x
-    mov r7, #5  ; tail y
-
-    ; OUTPUT FIRST 3 SEGMENTS OF SNAKE
-    call output_at_pos
-    inc r1
-    call output_at_pos
-    inc r1
-    call output_at_pos
-    inc r1
+    call print_border
+    call init_snake_and_apple
 
 snake_loop:
     mov r8, APPLE_X
@@ -146,33 +102,7 @@ end_tail:
     pop r1
 
 
-    push r1
-
-    mov r8, SPACES_LEFT
-    push r8
-
-    mov r8, SNAKE_LENGTH
-    push r8
-
-    push r7
-    push r6
-    push r2
-    push r1
-    mov r1, #dbg
-    push r1
-
-    call printf
-
-    pop r1
-    pop r1
-    pop r1
-    pop r1
-    pop r1
-    pop r1
-    pop r1
-
-
-    pop r1
+    call print_dbg_info
 
 
     ; PRINT DIRECTION VALUE AT HEAD
@@ -222,6 +152,11 @@ end_tail:
     jmp snake_loop
 
 
+
+dbg: .asciiz "\r\nHEAD: (%d, %d)  \r\nTAIL: (%d, %d)  \r\nL: %d  \r\nS: %d  "
+
+
+
 game_over:
     mov r1, #18
     mov r2, #8
@@ -250,7 +185,80 @@ print_score:
 
 
 
-dbg: .asciiz "\r\nHEAD: (%d, %d)  \r\nTAIL: (%d, %d)  \r\nL: %d  \r\nS: %d  "
+print_dbg_info:
+    push r1
+    mov r8, SPACES_LEFT
+    push r8
+    mov r8, SNAKE_LENGTH
+    push r8
+    push r7
+    push r6
+    push r2
+    push r1
+    mov r1, #dbg
+    push r1
+    call printf
+    pop r1
+    pop r1
+    pop r1
+    pop r1
+    pop r1
+    pop r1
+    pop r1
+    pop r1
+    ret
+
+
+init_snake_and_apple:
+    ; PRINT APPLE
+    mov r1, APPLE_X
+    mov r2, APPLE_Y
+    mov r3, '@'
+    call output_at_pos
+
+    ; MOVE SNAKE
+    mov r1, #3  ; start x
+    mov r2, #5  ; start y
+    mov r3, 'S' ; char
+    mov r4, #1   ; dx
+    mov r5, #0   ; dy
+
+    mov r6, #3  ; tail x
+    mov r7, #5  ; tail y
+
+    ; OUTPUT FIRST 3 SEGMENTS OF SNAKE
+    call output_at_pos
+    inc r1
+    call output_at_pos
+    inc r1
+    call output_at_pos
+    inc r1
+    ret
+
+
+
+print_border:
+    mov r5, #1
+    mov r3, '#'
+border_loop:
+    mov r1, r5
+    mov r2, #1
+    call output_at_pos   ; print left wall
+    mov r2, #15
+    call output_at_pos   ; print right wall
+
+    mov r2, r5
+    mov r1, #1
+    call output_at_pos   ; print top wall
+    mov r1, #15
+    call output_at_pos   ; print bottom wall
+
+    inc r5
+    cmp r5, #16
+    je border_end
+    jmp border_loop
+border_end:
+    ret
 
 
 
