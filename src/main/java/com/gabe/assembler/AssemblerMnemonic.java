@@ -40,8 +40,25 @@ public enum AssemblerMnemonic {
     POP(Map.of(new OperationHeader(REGISTER), CPUInstruction.POP)),
 
 
-    SHR(Map.of(new OperationHeader(REGISTER), CPUInstruction.SHR)),
-    SHL(Map.of(new OperationHeader(REGISTER), CPUInstruction.SHL)),
+    SHR(Map.of(new OperationHeader(REGISTER), CPUInstruction.SHR,
+                new OperationHeader(REGISTER, IMD), CPUInstruction.SHR_IM,
+                new OperationHeader(REGISTER, REGISTER), CPUInstruction.SHR_REG)),
+
+    SHL(Map.of(new OperationHeader(REGISTER), CPUInstruction.SHL,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.SHL_IM,
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.SHL_REG)),
+
+    ASR(Map.of(new OperationHeader(REGISTER), CPUInstruction.ASR,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.ASR_IM,
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.ASR_REG)),
+
+    ROL(Map.of(new OperationHeader(REGISTER), CPUInstruction.ROL,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.ROL_IM,
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.ROL_REG)),
+
+    ROR(Map.of(new OperationHeader(REGISTER), CPUInstruction.ROR,
+            new OperationHeader(REGISTER, IMD), CPUInstruction.ROR_IM,
+            new OperationHeader(REGISTER, REGISTER), CPUInstruction.ROR_REG)),
 
 
     INC(Map.of(new OperationHeader(REGISTER), CPUInstruction.INC)),

@@ -7,11 +7,6 @@
     call clear_screen
 
 
-;
-;    mov r1, #0 ;x
-;    mov r2, #0 ;y
-
-
  ; PRINT BORDER
     mov r5, #1
     mov r3, '#'
@@ -34,57 +29,221 @@ border_loop:
     jmp border_loop
 border_end:
 
-
-
-; MOVE SNAKE
-    mov r1, #5  ; x
-    mov r2, #5  ; y
-    mov r3, 'S' ; char
-    mov r4, #0   ; dx
-    mov r5, #1   ; dy
-snake_loop:
+    ; PRINT APPLE
+    mov r1, APPLE_X
+    mov r2, APPLE_Y
+    mov r3, '@'
     call output_at_pos
 
-    cmp r1, #1
-    je game_over
-    cmp r2, #1
-    je game_over
-    cmp r1, #15
-    je game_over
-    cmp r2, #15
-    je game_over
+    ; MOVE SNAKE
+    mov r1, #3  ; start x
+    mov r2, #5  ; start y
+    mov r3, 'S' ; char
+    mov r4, #1   ; dx
+    mov r5, #0   ; dy
 
+    mov r6, #3  ; tail x
+    mov r7, #5  ; tail y
+
+    ; OUTPUT FIRST 3 SEGMENTS OF SNAKE
+    call output_at_pos
+    inc r1
+    call output_at_pos
+    inc r1
+    call output_at_pos
+    inc r1
+
+snake_loop:
+mov r8, APPLE_X
+    cmp r1, r8
+    jne remove_tail
+    mov r8, APPLE_Y
+    cmp r2, r8
+    jne remove_tail
+
+    jmp skip_remove_tail
+
+remove_tail:
+    ; DELETE SNAKE TAIL
+    push r1
+    push r2
+    push r3
+    mov r1, r6
+    mov r2, r7
+    mov r3, ' '                 ; Space literal
+    call output_at_pos          ; Delete tail
+    pop r3
+    pop r2
+    pop r1
+    ; TAIL INDEX
+    mov r8, r7                  ; y cord
+    sub r8, #1                  ; zero index
+    mul r8, #15                 ; times width
+    add r8, r6                  ; plus x
+    sub r8, #1                  ; zero index
+    add r8, #DIRECTION_GRID     ; offset into array
+     push r8 ; keep track of index
+        mov r8, [r8] ; get direction index at tail
+
+        cmp r8, #2
+        je dir_check_left
+        cmp r8, #4
+        je dir_check_right
+        cmp r8, #1
+        je dir_check_up
+        cmp r8, #5
+        je dir_check_down
+
+        hlt ; TODO unknown????
+
+         dir_check_left:
+            sub r6, #1
+            jmp dir_check_end
+         dir_check_right:
+            add r6, #1
+            jmp dir_check_end
+         dir_check_up:
+            sub r7, #1
+            jmp dir_check_end
+         dir_check_down:
+            add r7, #1
+         dir_check_end:
+    pop r8
+    push r1
+    mov r1, #0
+    mov [r8], r1 ; remove direction index at tail
+    pop r1
+skip_remove_tail:
+
+
+
+    ; PRINT SNAKE HEAD
+    call output_at_pos
+
+
+
+
+   ; MOVE CURSOR AWAY
+    push r1
+    push r2
+    mov r1, #16
+    mov r2, #16
+    call cursor_to_pos  ; move the cursor out of the game area
+    pop r2
+    pop r1
+
+
+    push r1
+
+    push r7
+    push r6
+    push r2
+    push r1
+    mov r1, #dbg
+    push r1
+
+    call printf
+
+    pop r1
+    pop r1
+    pop r1
+    pop r1
+    pop r1
+
+
+    pop r1
+
+
+    ; PRINT DIRECTION VALUE AT HEAD
+    mov r8, r2                  ; y cord
+    sub r8, #1                  ; zero index
+    mul r8, #15                 ; times width
+    add r8, r1                  ; plus x
+    sub r8, #1                  ; zero index
+    add r8, #DIRECTION_GRID     ; offset into array
+
+    ; CHECK FOR COLLISION AT HEAD
+    push r8 ; keep track of index
+    mov r8, [r8] ; get direction index at head
+    cmp r8, #6
+    je apple
+    cmp r8, #0
+    jne game_over
+    jmp not_over
+
+    apple:
+    mov r8, #3
+    mov APPLE_X, r8
+    mov APPLE_Y, r8
+
+    push r1
+    push r2
+    push r3
+    mov r1, APPLE_X
+    mov r2, APPLE_Y
+    mov r3, '@'
+    call output_at_pos
+    pop r3
+    pop r2
+    pop r1
+
+    ;TODO move apple
+
+    not_over:
+    pop r8
+
+    ; calculate direction index,  f(dx, dy) = dx + 1 + 2(dy + 1)
+    ;    xxxxxx     air ==> 0
+    ;    (0, -1)     up ==> 1
+    ;    (-1, 0)   left ==> 2
+    ;    XXXXXX    wall ==> 3
+    ;    (1, 0)   right ==> 4
+    ;    (0, 1)    down ==> 5
+    ;    xxxxxx   apple ==> 6
+
+    push r7
+    mov r7, r5      ; load dy
+    add r7, #1      ; add 1
+    mul r7, #2      ; mul by 2
+    add r7, r4      ; offset by dx
+    add r7, #1      ; add 1
+    mov [r8], r7    ; put direction index at head
+    pop r7
+
+
+
+    ; MOVE HEAD IN DIRECTION
     add r1, r4
     add r2, r5
-
 
     call snake_delay
     jmp snake_loop
 
 
 game_over:
-    mov r1, #5
-    mov r2, #18
+    mov r1, #18
+    mov r2, #8
     call cursor_to_pos
     mov r1, #GAME_OVER_TEXT
     call print_string
     hlt
 
-
+dbg: .asciiz "\r\nHEAD: (%d, %d)   \r\nTAIL: (%d, %d)   "
 
 
 
 check_buttons:
-    push r2
     push r1
+    push r2
+
     check_up:
         mov r2, BTN_UP_MASK
         mov r1, $6001  ; load inputs
         and r1, r2     ; mask inputs
         cmp r1, #0
         je check_down
-        mov r4, MINUS_ONE
-        mov r5, #0
+        mov r4, #0
+        mov r5, MINUS_ONE
         ;dont jump to end to ensure roughly constant time during loop even when button is pressed
     check_down:
         mov r2, BTN_DOWN_MASK
@@ -92,8 +251,8 @@ check_buttons:
         and r1, r2     ; mask inputs
         cmp r1, #0
         je check_left
-        mov r4, #1
-        mov r5, #0
+        mov r4, #0
+        mov r5, #1
         ;jmp check_buttons_end
     check_left:
         mov r2, BTN_LEFT_MASK
@@ -101,8 +260,8 @@ check_buttons:
         and r1, r2     ; mask inputs
         cmp r1, #0
         je check_right
-        mov r4, #0
-        mov r5, MINUS_ONE
+        mov r4, MINUS_ONE
+        mov r5, #0
         ;jmp check_buttons_end
     check_right:
         mov r2, BTN_RIGHT_MASK
@@ -110,11 +269,11 @@ check_buttons:
         and r1, r2     ; mask inputs
         cmp r1, #0
         je check_buttons_end
-        mov r4, #0
-        mov r5, #1
+        mov r4, #1
+        mov r5, #0
     check_buttons_end:
-        pop r1
         pop r2
+        pop r1
         ret
 BTN_CENTER_MASK: .resw %000010000000000000000
 BTN_UP_MASK:     .resw %000100000000000000000
@@ -123,12 +282,27 @@ BTN_RIGHT_MASK:  .resw %010000000000000000000
 BTN_DOWN_MASK:   .resw %100000000000000000000
 MINUS_ONE:       .resw $ffffffff
 
+APPLE_X:        .resw 12
+APPLE_Y:        .resw 5
 
+DIRECTION_GRID:
+    .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 4 .resw 4 .resw 4 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 6 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3 .resw 3
 
 GAME_OVER_TEXT: .asciiz "GAME OVER!"
-
-
-
 
 
 snake_delay:
@@ -154,21 +328,52 @@ snake_delay_inner_end:
 snake_delay_end:
     pop r6
     pop r7
-    ret                     ; Return to main loop
+    ret                                 ; Return to main loop
 
 
 
 
 
 
- ; ========================================================= STANDARD LIBRARY =========================================================
- ; ========================================================= STANDARD LIBRARY =========================================================
- ; ========================================================= STANDARD LIBRARY =========================================================
- ; ========================================================= STANDARD LIBRARY =========================================================
- ; ========================================================= STANDARD LIBRARY =========================================================
- ; ========================================================= STANDARD LIBRARY =========================================================
 
 
+ ; ============================================================================ STANDARD LIBRARY ============================================================================
+ ; ============================================================================ STANDARD LIBRARY ============================================================================
+ ; ============================================================================ STANDARD LIBRARY ============================================================================
+ ; ============================================================================ STANDARD LIBRARY ============================================================================
+ ; ============================================================================ STANDARD LIBRARY ============================================================================
+ ; ============================================================================ STANDARD LIBRARY ============================================================================
+
+; ==========================================================
+; Function: random32
+; Generates a random #
+; Output: r1=random number
+; ==========================================================
+random32:
+    push r2
+
+    mov r1, RANDOM_SEED
+
+    ; x ^= x << 13
+    mov r2, r1
+    shl r2, #13
+    xor r1, r2
+
+    ; x ^= x >> 17
+    mov r2, r1
+    shr r2, #17
+    xor r1, r2
+
+    ; x ^= x << 5
+    mov r2, r1
+    shl r2, #5
+    xor r1, r2
+
+    mov RANDOM_SEED, r1
+
+    pop r2
+    ret
+RANDOM_SEED: .resw 42
 ; ==========================================================
 ; Function: cursor_to_pos
 ; Moves the cursor to (x, y)
@@ -178,8 +383,8 @@ cursor_to_pos:
     push r1
     push r5
 
-    push r2 ; y
     push r1 ; x
+    push r2 ; y
 
     mov r5, #move_format
     push r5 ; format
@@ -203,8 +408,8 @@ output_at_pos:
     push r5
 
     push r3 ; char
-    push r2 ; y
     push r1 ; x
+    push r2 ; y
 
     mov r5, #output_format
     push r5 ; format
@@ -220,7 +425,6 @@ output_at_pos:
     ret
 output_format: .asciiz "\e[%d;%dH%c"
 
-
 ; ==========================================================
 ; Function: printf
 ; Prints a string with embedded format specifiers. Accepts
@@ -230,6 +434,15 @@ output_format: .asciiz "\e[%d;%dH%c"
 printf:
     push bp
     mov bp, sp
+
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+    push r6
+    push r7
+    push r8
 
     mov r7, bp
     add r7, #4 ; points to the first argument
@@ -339,6 +552,15 @@ printf_print_bool:
     pop r1
     jmp printf_dont_send   ; continue in character loop
 printf_end:
+    pop r8
+    pop r7
+    pop r6
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+
     pop bp
     ret
 true_string: .asciiz "true"
@@ -424,13 +646,13 @@ print_binary:
     push r3
     push r5
     push r6
-    mov r3, r1                                      ; move input value into r3 to be shifted
-    mov r2, #32                                     ; r2 is shift counter
-    mov r6, msb_mask      ; leftmost bit mask
+    mov r3, r1                  ; move input value into r3 to be shifted
+    mov r2, #32                 ; r2 is shift counter
+    mov r6, msb_mask            ; leftmost bit mask
 print_binary_loop:
     mov r5, r3
     and r5, r6
-    cmp r5, #0     ; check if 0
+    cmp r5, #0                  ; check if 0
     je print_binary_send0
     mov r5, '1'
     jmp print_binary_send1
@@ -441,9 +663,9 @@ print_binary_send1:
 
     shl r3
     dec r2
-    cmp r2, #0            ; check if done shifting
-    je end_print_binary   ; yes, jump to end
-    jmp print_binary_loop ; no, keep looping
+    cmp r2, #0                  ; check if done shifting
+    je end_print_binary         ; yes, jump to end
+    jmp print_binary_loop       ; no, keep looping
 end_print_binary:
     pop r6
     pop r5
@@ -900,7 +1122,3 @@ mask_mant:     .resw $007FFFFF
 one_bit:       .resw $00800000
 overflow_mask: .resw $01000000
 msb_mask:      .resw %10000000000000000000000000000000
-
-myconst:       .float f12.5
-myconst2:      .float f1.0
-

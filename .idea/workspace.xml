@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="add duplicate label error message">
-      <change afterPath="$PROJECT_DIR$/bootloader.asm" afterDir="false" />
+    <list default="true" id="d47f7ac2-d90b-4960-ad54-7f43bb880d37" name="Changes" comment="moving snake example">
+      <change afterPath="$PROJECT_DIR$/shift_test.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/float.asm" beforeDir="false" afterPath="$PROJECT_DIR$/float.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Assembler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/AssemblerMnemonic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/TokenType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/assembler/Tokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.asm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/CPUInstruction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gabe/cpu/CPUInstruction.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +207,8 @@
       <workItem from="1782447849231" duration="2774000" />
       <workItem from="1782510046978" duration="613000" />
       <workItem from="1782511231457" duration="3813000" />
-      <workItem from="1782604415569" duration="9445000" />
+      <workItem from="1782604415569" duration="18521000" />
+      <workItem from="1782706884724" duration="25486000" />
     </task>
     <task id="LOCAL-00001" summary="Add delay in microcode for synchronous ram reads, tweak directives, add .mem file generation for vivado">
       <option name="closed" value="true" />
@@ -236,7 +234,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782267746952</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="interpret literals as unsigned, add missing operation headers for some bitwise operations, begin snake demo">
+      <option name="closed" value="true" />
+      <created>1782605762140</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1782605762140</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -248,6 +254,8 @@
     <MESSAGE value="add new jump instruction to register value, add immediate label operand type" />
     <MESSAGE value="add jump to register, add immediate label op and add support for floats" />
     <MESSAGE value="add duplicate label error message" />
-    <option name="LAST_COMMIT_MESSAGE" value="add duplicate label error message" />
+    <MESSAGE value="interpret literals as unsigned, add missing operation headers for some bitwise operations, begin snake demo" />
+    <MESSAGE value="moving snake example" />
+    <option name="LAST_COMMIT_MESSAGE" value="moving snake example" />
   </component>
 </project>

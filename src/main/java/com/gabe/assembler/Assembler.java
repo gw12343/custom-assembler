@@ -119,7 +119,7 @@ public class Assembler {
         }
         FileUtils.writePlainHexFile(dat, "C:\\Users\\Gabe\\Documents\\GitHub\\custom-emulator\\program.rom");
         FileUtils.writeHexMemFile(dat, "C:\\Users\\Gabe\\Documents\\GitHub\\custom-emulator\\program.mem");
-        FileUtils.writeHexMemFile(dat, "C:\\Users\\Gabe\\Documents\\VivadoProjects\\32BitCPU\\32BitCPU.srcs\\sources_1\\new\\program.mem");
+       // FileUtils.writeHexMemFile(dat, "C:\\Users\\Gabe\\Documents\\VivadoProjects\\32BitCPU\\32BitCPU.srcs\\sources_1\\new\\program.mem");
     }
 
     public static int getRegister(String s){

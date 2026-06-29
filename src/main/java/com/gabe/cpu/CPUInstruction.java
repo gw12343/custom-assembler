@@ -179,6 +179,7 @@ public enum CPUInstruction {
 
 
 
+
     SHR(List.of(
             USE_CONST_AS_B | CONSTANT_1 | ALU_SHIFT_LR | STORE_ALU_OUT | LOAD_INS_A,
             MC_END
@@ -188,6 +189,79 @@ public enum CPUInstruction {
             USE_CONST_AS_B | CONSTANT_1 | ALU_SHIFT_LL | STORE_ALU_OUT | LOAD_INS_A,
             MC_END
     ), 0x71, InstructionData.register1()),
+
+    ASR(List.of(
+            USE_CONST_AS_B | CONSTANT_1 | ALU_SHIFT_AR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x72, InstructionData.register1()),
+
+    ROL(List.of(
+            USE_CONST_AS_B | CONSTANT_1 | ALU_ROL | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x73, InstructionData.register1()),
+
+    ROR(List.of(
+            USE_CONST_AS_B | CONSTANT_1 | ALU_ROR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x74, InstructionData.register1()),
+
+
+
+    // bit shift immediates  =================
+    SHR_IM(List.of(
+            USE_INS_LIT_B | ALU_SHIFT_LR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x80, InstructionData.register1lit2()),
+
+    SHL_IM(List.of(
+            USE_INS_LIT_B | ALU_SHIFT_LL | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x81, InstructionData.register1lit2()),
+
+    ASR_IM(List.of(
+            USE_INS_LIT_B | ALU_SHIFT_AR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x82, InstructionData.register1lit2()),
+
+    ROL_IM(List.of(
+            USE_INS_LIT_B | ALU_ROL | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x83, InstructionData.register1lit2()),
+
+    ROR_IM(List.of(
+            USE_INS_LIT_B | ALU_ROR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x84, InstructionData.register1lit2()),
+
+    // bit shift 2 regs  =================
+    SHR_REG(List.of(
+            ALU_SHIFT_LR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x90, InstructionData.register1and2()),
+
+    SHL_REG(List.of(
+            ALU_SHIFT_LL | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x91, InstructionData.register1and2()),
+
+    ASR_REG(List.of(
+            ALU_SHIFT_AR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x92, InstructionData.register1and2()),
+
+    ROL_REG(List.of(
+            ALU_ROL | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x93, InstructionData.register1and2()),
+
+    ROR_REG(List.of(
+            ALU_ROR | STORE_ALU_OUT | LOAD_INS_A,
+            MC_END
+    ), 0x94, InstructionData.register1and2()),
+
+
+
+
 
 
 
