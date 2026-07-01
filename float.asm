@@ -11,10 +11,10 @@
 
 snake_loop:
     mov r8, APPLE_X
-    cmp r1, r8
+    cmp r1, r8              ; check if head x matches apple x
     jne remove_tail
     mov r8, APPLE_Y
-    cmp r2, r8
+    cmp r2, r8              ; check if head y matches apple y
     jne remove_tail
 
     jmp skip_remove_tail
@@ -82,6 +82,7 @@ skip_remove_tail:
     je you_win           ; check for win
 
     call move_apple
+    call move_cursor_away
 end_tail:
 
 
@@ -89,40 +90,14 @@ end_tail:
     ; PRINT SNAKE HEAD
     call output_at_pos
 
+    call move_cursor_away
 
+    ;call print_dbg_info
 
+    call calc_head_index        ; put index in r8
 
-   ; MOVE CURSOR AWAY
-    push r1
-    push r2
-    mov r1, #16
-    mov r2, #16
-    call cursor_to_pos  ; move the cursor out of the game area
-    pop r2
-    pop r1
+    call check_head_collision
 
-
-    call print_dbg_info
-
-
-    ; PRINT DIRECTION VALUE AT HEAD
-    mov r8, r2                  ; y cord
-    sub r8, #1                  ; zero index
-    mul r8, #15                 ; times width
-    add r8, r1                  ; plus x
-    sub r8, #1                  ; zero index
-    add r8, #DIRECTION_GRID     ; offset into array
-
-    ; CHECK FOR COLLISION AT HEAD
-    push r8 ; keep track of index
-    mov r8, [r8] ; get direction index at head
-    cmp r8, #6
-    je not_over
-    cmp r8, #0
-    jne game_over
-
-    not_over:
-    pop r8
 
     ; calculate direction index,  f(dx, dy) = dx + 1 + 2(dy + 1)
     ;    xxxxxx     air ==> 0
@@ -131,7 +106,6 @@ end_tail:
     ;    XXXXXX    wall ==> 3
     ;    (1, 0)   right ==> 4
     ;    (0, 1)    down ==> 5
-    ;    xxxxxx   apple ==> 6
 
     push r7
     mov r7, r5      ; load dy
@@ -153,7 +127,27 @@ end_tail:
 
 
 
-dbg: .asciiz "\r\nHEAD: (%d, %d)  \r\nTAIL: (%d, %d)  \r\nL: %d  \r\nS: %d  "
+dbg: .asciiz "\r\nHEAD: (%d, %d)  \r\nTAIL: (%d, %d)  \r\nAPPLE: (%d, %d)  \r\nL: %d  \r\nS: %d  "
+
+
+
+move_cursor_away:
+    push r1
+    push r2
+    mov r1, #16
+    mov r2, #16
+    call cursor_to_pos  ; move the cursor out of the game area
+    pop r2
+    pop r1
+    ret
+
+check_head_collision:
+    push r8 ; keep track of index
+    mov r8, [r8] ; get direction index at head
+    cmp r8, #0
+    pop r8
+    jne game_over
+    ret
 
 
 
@@ -183,13 +177,24 @@ print_score:
     pop r8
     hlt
 
-
+calc_head_index:
+    mov r8, r2                  ; y cord
+    sub r8, #1                  ; zero index
+    mul r8, #15                 ; times width
+    add r8, r1                  ; plus x
+    sub r8, #1                  ; zero index
+    add r8, #DIRECTION_GRID     ; offset into array
+    ret
 
 print_dbg_info:
     push r1
     mov r8, SPACES_LEFT
     push r8
     mov r8, SNAKE_LENGTH
+    push r8
+    mov r8, APPLE_Y
+    push r8
+    mov r8, APPLE_X
     push r8
     push r7
     push r6
@@ -198,6 +203,8 @@ print_dbg_info:
     mov r1, #dbg
     push r1
     call printf
+    pop r1
+    pop r1
     pop r1
     pop r1
     pop r1
@@ -243,15 +250,15 @@ print_border:
 border_loop:
     mov r1, r5
     mov r2, #1
-    call output_at_pos   ; print left wall
+    call output_at_pos   ; print top wall
     mov r2, #15
-    call output_at_pos   ; print right wall
+    call output_at_pos   ; print bottom wall
 
     mov r2, r5
     mov r1, #1
-    call output_at_pos   ; print top wall
+    call output_at_pos   ; print left wall
     mov r1, #15
-    call output_at_pos   ; print bottom wall
+    call output_at_pos   ; print right wall
 
     inc r5
     cmp r5, #16
@@ -267,6 +274,8 @@ check_buttons:
     push r2
 
     check_up:
+        cmp r5, #1
+        je check_down           ; prevent 180 turn
         mov r2, BTN_UP_MASK
         mov r1, $6001  ; load inputs
         and r1, r2     ; mask inputs
@@ -276,6 +285,8 @@ check_buttons:
         mov r5, MINUS_ONE
         ;dont jump to end to ensure roughly constant time during loop even when button is pressed
     check_down:
+        cmp r5, #1
+        jg check_left           ; prevent 180 turn (unsigned comparison)
         mov r2, BTN_DOWN_MASK
         mov r1, $6001  ; load inputs
         and r1, r2     ; mask inputs
@@ -285,6 +296,8 @@ check_buttons:
         mov r5, #1
         ;jmp check_buttons_end
     check_left:
+        cmp r4, #1                  ; check if currently going right
+        je check_right
         mov r2, BTN_LEFT_MASK
         mov r1, $6001  ; load inputs
         and r1, r2     ; mask inputs
@@ -294,6 +307,8 @@ check_buttons:
         mov r5, #0
         ;jmp check_buttons_end
     check_right:
+        cmp r4, #1                  ; check if currently going left
+        jg check_buttons_end
         mov r2, BTN_RIGHT_MASK
         mov r1, $6001  ; load inputs
         and r1, r2     ; mask inputs
@@ -340,14 +355,15 @@ move_apple:
     call random32               ; get a random 32 bit #
     and r1, #$ff                ; mod 256
     mov r2, SPACES_LEFT         ; load # of spaces
-    dec r2                      ; highest index allowed, starting at 0
-    cmp r1, r2
-    jg move_apple_mod_loop      ; if random # is out of range, find mod
-    jmp move_apple_done_mod     ; otherwise skip mod
+
 move_apple_mod_loop:
-    sub r1, r2                  ; subtract to check new remainder
-    cmp r1, r2                  ; compare remainder
-    jg move_apple_mod_loop      ; keep subtracting until in range
+    cmp r1, r2
+    jl move_apple_done_mod      ; if already less than SPACES_LEFT, skip mod
+
+    sub r1, r2
+    jmp move_apple_mod_loop     ; keep subtracting while r1 >= SPACES_LEFT
+
+
     ; SCAN LEFT TO RIGHT TOP TO BOTTOM, COUNTING EMPTY SPACES
     ; UNTIL R1 IS 0, THEN PLACE APPLE THERE
 move_apple_done_mod:
@@ -406,7 +422,7 @@ DIRECTION_GRID:
     .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
     .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
     .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
-    .resw 3 .resw 0 .resw 4 .resw 4 .resw 4 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 6 .resw 0 .resw 0 .resw 3
+    .resw 3 .resw 0 .resw 4 .resw 4 .resw 4 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
     .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
     .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
     .resw 3 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 0 .resw 3
